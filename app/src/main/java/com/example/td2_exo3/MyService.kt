@@ -8,6 +8,7 @@ import android.content.Intent
 import android.media.MediaPlayer
 import android.os.IBinder
 import android.util.Log
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.example.td2_exo3.App.Companion.CHANNEL_ID
 
@@ -53,16 +54,20 @@ class MyService : Service() {
 
         thread {
 
-            mediaPlayer = MediaPlayer.create(this, R.raw.azan1)
+
             while (true){
                 val currentTime: Date = Calendar.getInstance().getTime()
                 val sdfDate= SimpleDateFormat("dd-MM-yyyy")
                 val sdfTime=SimpleDateFormat("HH:mm")
 
-                ShowLog(sdfTime.format(currentTime))
+                //ShowLog(sdfTime.format(currentTime))
 
 
-                if (sdfTime.format(currentTime).equals("19:25")){
+                val a=AzanTimes()
+
+
+
+                if (sdfTime.format(currentTime) in a.times[sdfDate.format(currentTime)]!!){
 
                     val mNotificationUtils =
                         NotificationUtils(
@@ -74,6 +79,7 @@ class MyService : Service() {
                     mNotificationUtils.getManager().notify(101,nb!!.build())
 
 
+                    mediaPlayer = MediaPlayer.create(this, R.raw.azan1)
                     mediaPlayer.start()
 
                     Thread.sleep(61000)
